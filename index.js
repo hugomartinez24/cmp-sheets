@@ -3,6 +3,52 @@ const { google } = require("googleapis");
 const bodyParser = require("body-parser");
 
 const app = express();
+// ——— Endpoint que expone el esquema OpenAPI ———
+app.get("/mcp", (req, res) => {
+  res.json({
+    openapi: "3.1.0",
+    info: {
+      title: "Google Sheets MCP",
+      version: "1.0.0"
+    },
+    paths: {
+      "/mcp": {
+        post: {
+          operationId: "addToSheet",
+          description: "Añade contenido a la hoja de cálculo",
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    messages: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          content: { type: "string" }
+                        },
+                        required: ["content"]
+                      }
+                    }
+                  },
+                  required: ["messages"]
+                }
+              }
+            }
+          },
+          responses: {
+            "200": {
+              description: "Dato escrito correctamente"
+            }
+          }
+        }
+      }
+    }
+  });
+});
 app.use(bodyParser.json());
 
 // Carga la clave desde una variable de entorno
