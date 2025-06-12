@@ -89,8 +89,13 @@ app.post("/mcp", async (req, res) => {
   }
 });
 
+// 👉 Esto es lo que OpenAI necesita leer cuando visita la raíz "/"
 app.get("/", (req, res) => {
-  res.send("Servidor MCP activo desde Railway.");
+  res.json({
+    openapi: "3.1.0",
+    info: { title: "Google Sheets MCP", version: "1.0.0" },
+    paths: { "/mcp": { post: { operationId: "addToSheet" } } }
+  });
 });
 
 const PORT = process.env.PORT || 3000;
